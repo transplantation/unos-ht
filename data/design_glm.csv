@@ -1,0 +1,10 @@
+resampling,features,categorical_imputation,algorithm,Dname
+none,FFS,MODE,glm,full_glm_pitzer
+smote,LASSO,DROP,NA,NA
+down,RF,UNKNOWN,NA,NA
+up,NA,MISSING,NA,NA
+rose,NA,NA,NA,NA
+NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA

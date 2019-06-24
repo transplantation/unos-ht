@@ -1,0 +1,10 @@
+resampling,features,categorical_imputation,algorithm,Dname
+none,RF,MODE,nnet,full_nnet_RF
+smote,NA,DROP,NA,NA
+down,NA,UNKNOWN,NA,NA
+up,NA,MISSING,NA,NA
+rose,NA,NA,NA,NA
+NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA
+NA,NA,NA,NA,NA
