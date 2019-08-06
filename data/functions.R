@@ -379,7 +379,7 @@ dummy_maker_app<-function(input_data, char_var){
 # change all "U" to Unknown (this is for shinny app)
 find_U <- function(x){
   col_index <- which(x=="U")
-  if (length(col_index)!=0) x[col_index] <- "UNKOWN"
+  if (length(col_index)!=0) x[col_index] <- "UNKNOWN"
   return(x)
 }
 
