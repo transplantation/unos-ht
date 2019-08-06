@@ -13,7 +13,7 @@
 ## Other levels that are not specified in val_old are put into "OTHER"
 ## Return value: a data object after re-groupping levels in the given variable
 cat_changer <- function(data_set,var,val_old,val_new){
-  temp_var <- dplyr::pull(data_set,var)
+  temp_var <- as.character(dplyr::pull(data_set,var))
   cum_index <-c()
   for (i in 1:length(val_old)){
     index <- which(data_set[,var]==val_old[i])
