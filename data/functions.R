@@ -1079,3 +1079,40 @@ get.vim <- function(rf) {
   }
   return(vim)
 }
+                            
+# this function specialized for doing a pivot table for the results of the supercomputer
+# functio_pvt: the pivot function
+# rows_names: columns of the input table                            
+# columns_names: the rows of the outcome table
+                            
+pvt_maker<-function(data_res,functio_pvt=c("mean"),
+                    rows_names=c("encoding","feature_selection","imputation_num","imputation_cat","resampling"),
+                    columns_names=c("auc","sen","spec","accu","gmean")){
+  
+  if(!"pacman" %in% rownames(installed.packages())){
+    install.packages(pkgs = "pacman",repos = "http://cran.us.r-project.org")
+  }
+  # p_load is equivalent to combining both install.packages() and library()
+  pacman::p_load(pivottabler,openxlsx)
+
+pt <- PivotTable$new()
+pt$addData(data_res)
+#pt$addColumnDataGroups("auc")
+for(i in rows_names){
+  pt$addRowDataGroups(i, totalCaption="Total")
+}
+for(j in columns_names){
+  pt$defineCalculation(calculationName=paste0(j,"_",functio_pvt), 
+                       summariseExpression=paste0(functio_pvt,"(",j, ", na.rm=TRUE)"))
+}
+
+pt$renderPivot()
+# library(openxlsx)
+# wb <- createWorkbook(creator = Sys.getenv("USERNAME"))
+# addWorksheet(wb, "Data")
+# pt$writeToExcelWorksheet(wb=wb, wsName="Data", 
+#                           topRowNumber=1, leftMostColumnNumber=1, applyStyles=FALSE)
+# saveWorkbook(wb, file="glm_pivot.xlsx", overwrite = TRUE)
+# setwd("C:/Users/hza0020/OneDrive - Auburn University/Transplant/BUAL-LAB/DoE/temp/test RF/results")
+pt<-pt$asDataFrame()
+return(pt)}                            
