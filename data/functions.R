@@ -138,7 +138,7 @@ DOE_function <- function(ii, design_scenario, all_data, y, all_ID, holdout_ID_in
       colnames(Predicted_Probability[["training_data"]]) <- c(y, algorithm,"probability")
       Predicted_Probability[["training_data"]][,y] <- training_data[,y]
       Predicted_Probability[["training_data"]][,algorithm] <- predict(result_model, newdata=training_data, type="raw")
-      Predicted_Probability[["training_data"]][,"probability"] <- predict(result_model, newdata=training_data, type="prob")[,2]
+      Predicted_Probability[["training_data"]][,"probability"] <- predict(result_model, newdata=training_data, type="prob")[,1]
       Predicted_Probability[["holdout_data"]][,y] <- hold_out[,y]
       
       return(list(Result, Predicted_Probability))
@@ -506,7 +506,7 @@ train_iso<-function(iii, t_data,h_data,features,folds=5,resampl_meth="up",alg_us
     
     
     resul_raw[alg_fact] <- predict(result_model, newdata=hold_out, type="raw")
-    resul_raw$Probability <- predict(result_model, newdata=hold_out, type="prob")[,2]
+    resul_raw$Probability <- predict(result_model, newdata=hold_out, type="prob")[,1]
     resul_pred_perf[1,1] <- AUC::auc(roc(resul_raw$Probability,as.factor(as.data.frame(hold_out[,TARGET0])[,1])))
     resul_pred_perf[2,1] <- caret::sensitivity(resul_raw[,alg_fact],as.factor(as.data.frame(hold_out[,TARGET0])[,1]))
     resul_pred_perf[3,1] <- caret::specificity(resul_raw[,alg_fact],as.factor(as.data.frame(hold_out[,TARGET0])[,1]))
