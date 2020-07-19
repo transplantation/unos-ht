@@ -1,7 +1,4 @@
-Algorithm,"Numerical
-Imputation","Categorical
-Imputation",Encoding,"Feature
-Selection",Re-sampling,G_Mean,AUC,Sensitivity,Specificity,Accuracy
+﻿Algorithm,Numerical.Imputation,Categorical.Imputation,Encoding,Feature.Selection,Re-sampling,G_Mean,AUC,Specificity,Sensitivity,Accuracy
 LR,MEDIAN,UNKNOWN,One-Hot,LASSO,up,0.6104371,0.6547064,0.5926826,0.6288161,0.6238882
 XGB,MEDIAN,DROP,One-Hot,LASSO,down,0.607258,0.6493296,0.5845473,0.6309487,0.6248489
 LDA,MEDIAN,UNKNOWN,One-Hot,LASSO,up,0.6064914,0.6483876,0.592725,0.6206936,0.6168792
