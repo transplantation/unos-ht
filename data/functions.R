@@ -490,7 +490,6 @@ train_iso<-function(iii, t_data,h_data,features,folds=5,resampl_meth="up",alg_us
     resul_pred_perf_folds<-as.data.frame(matrix(NA, ncol = fold_no, nrow = 5))
     colnames(resul_pred_perf_folds)<-paste0("fold",1:fold_no)
     rownames(resul_pred_perf_folds)<-c("auc","sen","spec","accu","gmean")
-    resul_pred_perf_folds["auc",1]
     
     fold_res<-list()
     
