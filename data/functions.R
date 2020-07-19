@@ -55,13 +55,12 @@ DOE_function <- function(ii, design_scenario, all_data, y, all_ID, holdout_ID_in
   # obtain the training and hold_out datasets
   training_data <- input_data[!input_data$ID%in%Holdout_ID,] %>% select(c(features, y))
   hold_out <- input_data[input_data$ID%in%Holdout_ID,] %>% select(c(features, y))
-  
+   
   # make sure the response variable is categorical
   training_data[[y]] <- as.factor(training_data[[y]])
+  levels(training_data[[y]]) <- list(Survival="Survival", Death="Death")
   hold_out[[y]] <- as.factor(hold_out[[y]])
-  
-  training_data[[y]] <- as.factor(training_data[[y]])
-  hold_out[[y]] <- as.factor(hold_out[[y]])
+  levels(hold_out[[y]]) <- list(Survival="Survival", Death="Death")
   
   # define the formula that we will use in the modeling
   formul <- as.formula(paste0(as.character(y), "~."))
@@ -397,6 +396,11 @@ train_iso<-function(iii, t_data,h_data,features,folds=5,resampl_meth="up",alg_us
   traindata <- df[c(as.character(features[[paste0("year",iii-1)]][,]),paste0("year",iii-1) )]
   hold_out<-hold_out_[c(as.character(features[[paste0("year",iii-1)]][,]),paste0("year",iii-1),"ID" )]
   TARGET0<-paste0("year",iii-1)
+  
+  training_data[[TARGET0]] <- as.factor(training_data[[TARGET0]])
+  levels(training_data[[TARGET0]]) <- list(Survival="Survival", Death="Death")
+  hold_out[[TARGET0]] <- as.factor(hold_out[[TARGET0]])
+  levels(hold_out[[TARGET0]]) <- list(Survival="Survival", Death="Death")
   
   formul<-as.formula(paste0(as.character(TARGET0),"~."))
   
