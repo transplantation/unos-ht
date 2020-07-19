@@ -18,7 +18,8 @@ dataTypes <- function(input_data) {
   return(temp.data)
 }
 
-DOE_function <- function(ii, design_scenario, all_data, y, all_ID, holdout_ID_index, all_features, return.prediction=FALSE, seed) {
+DOE_function <- function(ii, design_scenario, all_data, y, all_ID, holdout_ID_index, all_features, 
+                         return.prediction=FALSE, seed){
   # DOE_function(): a function that applies the data to the model specified in the design_scenario
   # ii: index used to navigate to different scenario
   # design_scenario: a data frame that contains all scenarios
@@ -39,7 +40,7 @@ DOE_function <- function(ii, design_scenario, all_data, y, all_ID, holdout_ID_in
   conflict_prefer("select", "dplyr")
   
   scenario <- design_scenario[ii,]
-  set.seed <- seed
+  set.seed(seed)
   
   # obtain the necessary information regarding the scenario
   fold <- scenario$fold
@@ -56,6 +57,9 @@ DOE_function <- function(ii, design_scenario, all_data, y, all_ID, holdout_ID_in
   hold_out <- input_data[input_data$ID%in%Holdout_ID,] %>% select(c(features, y))
   
   # make sure the response variable is categorical
+  training_data[[y]] <- as.factor(training_data[[y]])
+  hold_out[[y]] <- as.factor(hold_out[[y]])
+  
   training_data[[y]] <- as.factor(training_data[[y]])
   hold_out[[y]] <- as.factor(hold_out[[y]])
   
@@ -244,18 +248,18 @@ search_complete <- function(input_data, max.iter=100000) {
     max_col <- max(count_col)
     max_row <- max(count_row)
     max_emp <- max(max_col,max_row)
-
+    
     if (max_col==0){break()}
     if (max_row==0){break()}
     
     if (max_emp==max_row){
-        if((nrow(input_data))>3){
-          a <- which(count_row$na_count_row==max_row)
-          data_temp <- input_data[-a,]
-        }else{
-          print("Data have less than 4 rows! The algorithm fails.")
-          break()
-        }
+      if((nrow(input_data))>3){
+        a <- which(count_row$na_count_row==max_row)
+        data_temp <- input_data[-a,]
+      }else{
+        print("Data have less than 4 rows! The algorithm fails.")
+        break()
+      }
     }
     
     if (max_col>=max_row){
@@ -304,7 +308,7 @@ select_variables <- function(ii, all_data, y, method, ID_all, ID_index, seed=201
   if(require(pacman)==FALSE) install.packages("pacman")
   pacman::p_load(Biocomb, glmnet, party, ranger)
   
-  set.seed <- seed	
+  set.seed(seed)
   input_data <- as.data.frame(all_data[[ii]])
   all_types <- unlist(lapply(input_data, class))
   char.index <- which(all_types=="factor")
@@ -313,8 +317,9 @@ select_variables <- function(ii, all_data, y, method, ID_all, ID_index, seed=201
   input_data[,char.index] <- lapply(input_data[,char.index], droplevels)
   input_data <- input_data[,colnames(input_data)!="ID"]
   input_data[,y] <- as.factor(input_data[,y])
+  
   X <- input_data[,colnames(input_data)!=y]
-    
+  
   if (method=="FFS"){
     X$y <- input_data[,y]
     disc <- "MDL"
@@ -334,18 +339,18 @@ select_variables <- function(ii, all_data, y, method, ID_all, ID_index, seed=201
     Success <- 0
     iteration <- 0
     while (Success==0 & iteration <=10){
-          rf <- ranger(formula(paste0(y, "~.")), data=input_data, num.trees = 500, importance = "permutation",
-                       scale.permutation.importance = FALSE,  mtry = floor(0.2 * ncol(X)),
-                       min.node.size = floor(0.1 * nrow(X)),
-                       num.threads = 1,
-                       write.forest = TRUE)
-          if (min(importance(rf))<0){
-            Imp_values <- importance(rf)/abs(min(importance(rf)))
-            Imp_vars <- names(which(Imp_values>1))
-            Success <- 1
-          }else{
-            iteration <- iteration + 1
-          }
+      rf <- ranger(formula(paste0(y, "~.")), data=input_data, num.trees = 500, importance = "permutation",
+                   scale.permutation.importance = FALSE,  mtry = floor(0.2 * ncol(X)),
+                   min.node.size = floor(0.1 * nrow(X)),
+                   num.threads = 1,
+                   write.forest = TRUE)
+      if (min(importance(rf))<0){
+        Imp_values <- importance(rf)/abs(min(importance(rf)))
+        Imp_vars <- names(which(Imp_values>1))
+        Success <- 1
+      }else{
+        iteration <- iteration + 1
+      }
     }
     if (iteration>10){
       print("At least 10 runs with no negative importance score!")
@@ -503,7 +508,7 @@ train_iso<-function(iii, t_data,h_data,features,folds=5,resampl_meth="up",alg_us
     resul_pred_perf[3,1] <- caret::specificity(resul_raw[,alg_fact],as.factor(as.data.frame(hold_out[,TARGET0])[,1]))
     resul_pred_perf[4,1] <- (as.data.frame(confusionMatrix(resul_raw[,alg_fact], as.factor(as.data.frame(hold_out[,TARGET0])[,1]))$overall))[1,]
     resul_pred_perf[5,1] <- sqrt(resul_pred_perf[2,1]*resul_pred_perf[3,1])
-
+    
     gmean_overal<-as.data.frame(result_model$results)
     gmean_folds<-as.data.frame(result_model$resample)
     equat<-as.data.frame(result_model$finalModel$coefficients)
@@ -612,4 +617,3 @@ select_variables_iso<-function(ii,data,method,exclud="ID",folds=5,alpha=1,seed=1
   
   return(Imp_vars)
 }
-
