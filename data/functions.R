@@ -397,8 +397,8 @@ train_iso<-function(iii, t_data,h_data,features,folds=5,resampl_meth="up",alg_us
   hold_out<-hold_out_[c(as.character(features[[paste0("year",iii-1)]][,]),paste0("year",iii-1),"ID" )]
   TARGET0<-paste0("year",iii-1)
   
-  training_data[[TARGET0]] <- as.factor(training_data[[TARGET0]])
-  levels(training_data[[TARGET0]]) <- list(Survival="Survival", Death="Death")
+  traindata[[TARGET0]] <- as.factor(traindata[[TARGET0]])
+  levels(traindata[[TARGET0]]) <- list(Survival="Survival", Death="Death")
   hold_out[[TARGET0]] <- as.factor(hold_out[[TARGET0]])
   levels(hold_out[[TARGET0]]) <- list(Survival="Survival", Death="Death")
   
